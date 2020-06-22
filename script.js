@@ -1,25 +1,16 @@
 function initPage() {
-  const inputEl = document.getElementById("city-input");
-
-  const searchEl = document.getElementById("search-button");
-
-  const clearEl = document.getElementById("clear-history");
-
-  const nameEl = document.getElementById("city-name");
-
-  const currentPicEl = document.getElementById("current-pic");
-
-  const currentTempEl = document.getElementById("temperature");
-
-  const currentHumidityEl = document.getElementById("humidity");
+  const inputEl = $("#city-input");
+  const searchEl = $("#search-button");
+  const clearEl = $("#clear-history");
+  const nameEl = $("#city-name");
+  const currentPicEl = $("#current-pic");
+  const currentTempEl = $("#temperature");
+  const currentHumidityEl = $("#humidity");
   4;
 
-  const currentWindEl = document.getElementById("wind-speed");
-
-  const currentUVEl = document.getElementById("UV-index");
-
-  const historyEl = document.getElementById("history");
-
+  const currentWindEl = $("#wind-speed");
+  const currentUVEl = $("#UV-index");
+  const historyEl = $("#history");
   let searchHistory = JSON.parse(localStorage.getItem("search")) || [];
 
   console.log(searchHistory);
@@ -36,7 +27,7 @@ function initPage() {
       cityName +
       "&appid=" +
       APIKey;
-
+    console.log("QUERYURL-30:", queryURL);
     // axios
     //   .get(queryURL)
     $.ajax({
@@ -48,8 +39,8 @@ function initPage() {
       //  Parse response to display current conditions
 
       //  Method for using "date" objects obtained from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date
-      response.data = response;
-      const currentDate = new Date(response.data.dt * 1000);
+      // response.data = response;
+      const currentDate = new Date(response.dt * 1000);
 
       console.log(currentDate);
 
@@ -59,30 +50,26 @@ function initPage() {
 
       const year = currentDate.getFullYear();
 
-      nameEl.innerHTML =
-        response.data.name + " (" + month + "/" + day + "/" + year + ") ";
+      nameEl.text(response.name + " (" + month + "/" + day + "/" + year + ") ");
 
-      let weatherPic = response.data.weather[0].icon;
+      let weatherPic = response.weather[0].icon;
 
-      currentPicEl.setAttribute(
+      currentPicEl.attr(
         "src",
         "https://openweathermap.org/img/wn/" + weatherPic + "@2x.png"
       );
 
-      currentPicEl.setAttribute("alt", response.data.weather[0].description);
+      currentPicEl.attr("alt", response.weather[0].description);
 
-      currentTempEl.innerHTML =
-        "Temperature: " + k2f(response.data.main.temp) + " &#176F";
+      currentTempEl.text("Temperature: " + k2f(response.main.temp) + " &#176F");
 
-      currentHumidityEl.innerHTML =
-        "Humidity: " + response.data.main.humidity + "%";
+      currentHumidityEl.text("Humidity: " + response.main.humidity + "%");
 
-      currentWindEl.innerHTML =
-        "Wind Speed: " + response.data.wind.speed + " MPH";
+      currentWindEl.text("Wind Speed: " + response.wind.speed + " MPH");
 
-      let lat = response.data.coord.lat;
+      let lat = response.coord.lat;
 
-      let lon = response.data.coord.lon;
+      let lon = response.coord.lon;
 
       let UVQueryURL =
         "https://api.openweathermap.org/data/2.5/uvi/forecast?lat=" +
@@ -92,27 +79,27 @@ function initPage() {
         "&appid=" +
         APIKey +
         "&cnt=1";
-
+      console.log("UVQUERYURL-83:", UVQueryURL);
       //   axios
       //     .get(UVQueryURL)
       $.ajax({
         url: queryURL,
         method: "GET",
       }).then(function (response) {
-        let UVIndex = document.createElement("span");
+        let UVIndex = $("<span>");
+        console.log("UVRESPONSE:", response);
+        UVIndex.attr("class", "badge badge-danger");
+        //response = response.data;
+        UVIndex.text(response.value);
 
-        UVIndex.setAttribute("class", "badge badge-danger");
-        response = response.data;
-        UVIndex.innerHTML = response.data[0].value;
-
-        currentUVEl.innerHTML = "UV Index: ";
+        currentUVEl.text("UV Index: ");
 
         currentUVEl.append(UVIndex);
       });
 
       //  Using saved city name, execute a 5-day forecast get request from open weather map api
 
-      let cityID = response.data.id;
+      let cityID = response.id;
 
       let forecastQueryURL =
         "https://api.openweathermap.org/data/2.5/forecast?id=" +
@@ -132,65 +119,76 @@ function initPage() {
 
           //  Parse response to display forecast for next 5 days underneath current conditions
 
-          console.log(response);
-          response.data = response;
-          const forecastEls = document.querySelectorAll(".forecast");
-
+          console.log("5DAY forecast:", response);
+          //response.data = response;
+          const forecastEls = $(".forecast");
+          console.log("FE_length", forecastEls.length);
           for (i = 0; i < forecastEls.length; i++) {
-            forecastEls[i].innerHTML = "";
+            jQuery(forecastEls[i]).html("");
 
             const forecastIndex = i * 8 + 4;
 
             const forecastDate = new Date(
-              response.data.list[forecastIndex].dt * 1000
+              response.list[forecastIndex].dt * 1000
             );
 
             const forecastDay = forecastDate.getDate();
+            console.log("TYPEOF:", typeof forecastDate.getDate());
 
             const forecastMonth = forecastDate.getMonth() + 1;
 
             const forecastYear = forecastDate.getFullYear();
 
-            const forecastDateEl = document.createElement("p");
+            const forecastDateEl = $("<p>");
 
-            forecastDateEl.setAttribute("class", "mt-3 mb-0 forecast-date");
-
-            forecastDateEl.innerHTML =
-              forecastMonth + "/" + forecastDay + "/" + forecastYear;
-
+            forecastDateEl.attr("class", "mt-3 mb-0 forecast-date");
+            console.log("forecastDay:", forecastDay);
+            console.log(
+              "entiredate:",
+              forecastMonth.toString() +
+                "/" +
+                forecastDay.toString() +
+                "/" +
+                forecastYear.toString()
+            );
+            forecastDateEl.text(
+              forecastMonth.toString() +
+                "/" +
+                forecastDay.toString() +
+                "/" +
+                forecastYear.toString()
+            );
             forecastEls[i].append(forecastDateEl);
 
-            const forecastWeatherEl = document.createElement("img");
+            const forecastWeatherEl = $("<img>");
 
-            forecastWeatherEl.setAttribute(
+            forecastWeatherEl.attr(
               "src",
               "https://openweathermap.org/img/wn/" +
-                response.data.list[forecastIndex].weather[0].icon +
+                response.list[forecastIndex].weather[0].icon +
                 "@2x.png"
             );
 
-            forecastWeatherEl.setAttribute(
+            forecastWeatherEl.attr(
               "alt",
-              response.data.list[forecastIndex].weather[0].description
+              response.list[forecastIndex].weather[0].description
             );
 
             forecastEls[i].append(forecastWeatherEl);
 
-            const forecastTempEl = document.createElement("p");
+            const forecastTempEl = $("<p>");
 
-            forecastTempEl.innerHTML =
-              "Temp: " +
-              k2f(response.data.list[forecastIndex].main.temp) +
-              " &#176F";
+            forecastTempEl.html(
+              "Temp: " + k2f(response.list[forecastIndex].main.temp) + " &#176F"
+            );
 
             forecastEls[i].append(forecastTempEl);
 
-            const forecastHumidityEl = document.createElement("p");
+            const forecastHumidityEl = $("<p>");
 
-            forecastHumidityEl.innerHTML =
-              "Humidity: " +
-              response.data.list[forecastIndex].main.humidity +
-              "%";
+            forecastHumidityEl.html(
+              "Humidity: " + response.list[forecastIndex].main.humidity + "%"
+            );
 
             forecastEls[i].append(forecastHumidityEl);
           }
@@ -198,8 +196,8 @@ function initPage() {
     });
   }
 
-  searchEl.addEventListener("click", function () {
-    const searchTerm = inputEl.value;
+  searchEl.on("click", function () {
+    const searchTerm = inputEl.val().trim();
 
     getWeather(searchTerm);
 
@@ -210,7 +208,7 @@ function initPage() {
     renderSearchHistory();
   });
 
-  clearEl.addEventListener("click", function () {
+  clearEl.on("click", function () {
     searchHistory = [];
 
     renderSearchHistory();
@@ -221,23 +219,23 @@ function initPage() {
   }
 
   function renderSearchHistory() {
-    historyEl.innerHTML = "";
+    historyEl.html("");
 
     for (let i = 0; i < searchHistory.length; i++) {
-      const historyItem = document.createElement("input");
+      const historyItem = $("<input>");
 
       // <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="email@example.com"></input>
 
-      historyItem.setAttribute("type", "text");
+      historyItem.attr("type", "text");
 
-      historyItem.setAttribute("readonly", true);
+      historyItem.attr("readonly", true);
 
-      historyItem.setAttribute("class", "form-control d-block bg-white");
+      historyItem.attr("class", "form-control d-block bg-white");
 
-      historyItem.setAttribute("value", searchHistory[i]);
+      historyItem.attr("value", searchHistory[i]);
 
-      historyItem.addEventListener("click", function () {
-        getWeather(historyItem.value);
+      historyItem.on("click", function () {
+        getWeather(historyItem.val().trim());
       });
 
       historyEl.append(historyItem);
