@@ -1,29 +1,18 @@
 function initPage() {
   const inputEl = document.getElementById("city-input");
-
   const searchEl = document.getElementById("search-button");
-
   const clearEl = document.getElementById("clear-history");
-
   const nameEl = document.getElementById("city-name");
-
   const currentPicEl = document.getElementById("current-pic");
-
   const currentTempEl = document.getElementById("temperature");
-
   const currentHumidityEl = document.getElementById("humidity");
-
   const currentWindEl = document.getElementById("wind-speed");
-
   const currentUVEl = document.getElementById("UV-index");
-
   const historyEl = document.getElementById("history");
-
   let searchHistory = JSON.parse(localStorage.getItem("search")) || [];
 
   console.log(searchHistory);
 
-  //const APIKey = "c9a9ed03a355403f4cb9a36e931c0b4a";
   const APIKey = "452691537bbf409c6544c02c76a1f6ad";
   //  When search button is clicked, read the city name typed by the user
 
@@ -107,15 +96,9 @@ function initPage() {
         url: UVQueryURL,
         method: "GET",
       }).then(function (response) {
-        console.log("uvqueryurl:", queryURL);
-        console.log("UVRESPONSE:", response);
         const currentDateUV = new Date(response.daily[0].dt * 1000);
-
-        console.log("currentDateUV:", currentDateUV);
-
-        const dayUV = currentDateUV.getDate();
-        console.log("currentDayUV:", dayUV);
         let UVIndex = document.createElement("span");
+
         //The following provide appropriate color coding for the UV-index field,
         //based on fetched UVI values from response.
         const uvi = Math.round(response.daily[0].uvi);
