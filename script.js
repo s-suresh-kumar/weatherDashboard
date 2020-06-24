@@ -118,24 +118,21 @@ function initPage() {
         let UVIndex = document.createElement("span");
         //The following provide appropriate color coding for the UV-index field,
         //based on fetched UVI values from response.
-        UVIndex.setAttribute("class", "badge badge-success");
-        if (response.daily[0].uvi > 0 && response.daily[0].uvi < 3) {
+        const uvi = Math.round(response.daily[0].uvi);
+        if (uvi <= 2) {
           UVIndex.setAttribute("style", "background-color:green");
-        } else if (response.daily[0].uvi > 3 && response.daily[0].uvi < 6) {
+        } else if (uvi >= 3 && uvi <= 5) {
           UVIndex.setAttribute("style", "background-color:yellow");
-        } else if (response.daily[0].uvi > 6 && response.daily[0].uvi < 8) {
+        } else if (uvi >= 6 && uvi <= 7) {
           UVIndex.setAttribute("style", "background-color:orange");
-        } else if (response.daily[0].uvi > 8 && response.daily[0].uvi < 11) {
+        } else if (uvi >= 8 && uvi <= 10) {
           UVIndex.setAttribute("style", "background-color:red");
-        } else if (response.daily[0].uvi > 11) {
+        } else if (uvi >= 11) {
           UVIndex.setAttribute("style", "background-color:indigo");
         }
 
-        //UVIndex.setAttribute("class", uvclass);
         UVIndex.innerHTML = response.daily[0].uvi;
-
         currentUVEl.innerHTML = "UV Index: ";
-
         currentUVEl.append(UVIndex);
       });
 
