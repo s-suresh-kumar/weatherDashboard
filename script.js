@@ -83,27 +83,56 @@ function initPage() {
 
       let lon = response.data.coord.lon;
 
+      // let UVQueryURL =
+      //   "https://api.openweathermap.org/data/2.5/uvi/forecast?lat=" +
+      //   lat +
+      //   "&lon=" +
+      //   lon +
+      //   "&appid=" +
+      //   APIKey +
+      //   "&cnt=1";
+
       let UVQueryURL =
-        "https://api.openweathermap.org/data/2.5/uvi/forecast?lat=" +
+        "https://api.openweathermap.org/data/2.5/onecall?lat=" +
         lat +
         "&lon=" +
         lon +
-        "&appid=" +
-        APIKey +
-        "&cnt=1";
+        "&exclude=current,minutely,hourly&appid=" +
+        APIKey;
 
-      //   axios
-      //     .get(UVQueryURL)
+      // let UVQueryURL = "http://api.openweathermap.org/v3/uvi/" + lat + ",";
+      // lon + "current.json?appid=" + APIKey;
+      // http://api.openweathermap.org/v3/uvi/{lat},{lon}/current.json?appid={your-api-key
       $.ajax({
-        url: queryURL,
+        url: UVQueryURL,
         method: "GET",
       }).then(function (response) {
+        console.log("uvqueryurl:", queryURL);
         console.log("UVRESPONSE:", response);
-        let UVIndex = document.createElement("span");
+        const currentDateUV = new Date(response.daily[0].dt * 1000);
 
-        UVIndex.setAttribute("class", "badge badge-danger");
-        // response = response.data;
-        UVIndex.innerHTML = response.cod;
+        console.log("currentDateUV:", currentDateUV);
+
+        const dayUV = currentDateUV.getDate();
+        console.log("currentDayUV:", dayUV);
+        let UVIndex = document.createElement("span");
+        //The following provide appropriate color coding for the UV-index field,
+        //based on fetched UVI values from response.
+        UVIndex.setAttribute("class", "badge badge-success");
+        if (response.daily[0].uvi > 0 && response.daily[0].uvi < 3) {
+          UVIndex.setAttribute("style", "background-color:green");
+        } else if (response.daily[0].uvi > 3 && response.daily[0].uvi < 6) {
+          UVIndex.setAttribute("style", "background-color:yellow");
+        } else if (response.daily[0].uvi > 6 && response.daily[0].uvi < 8) {
+          UVIndex.setAttribute("style", "background-color:orange");
+        } else if (response.daily[0].uvi > 8 && response.daily[0].uvi < 11) {
+          UVIndex.setAttribute("style", "background-color:red");
+        } else if (response.daily[0].uvi > 11) {
+          UVIndex.setAttribute("style", "background-color:indigo");
+        }
+
+        //UVIndex.setAttribute("class", uvclass);
+        UVIndex.innerHTML = response.daily[0].uvi;
 
         currentUVEl.innerHTML = "UV Index: ";
 
