@@ -1,6 +1,6 @@
 # weatherDashboard
 
-[![Thumbnail](assets/images/weatherBoard-thumbnail.jpg)](https://s-suresh-kumar.github.io/weatherBoard/)
+[![Thumbnail](assets/images/weatherDashboard-screencapture.JPG)](https://s-suresh-kumar.github.io/weatherBoard/)
 
 ## Purpose
 
