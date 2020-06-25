@@ -1,6 +1,6 @@
 # weatherDashboard
 
-[![Thumbnail](assets/images/weatherDashboard-screencapture.JPG)](https://s-suresh-kumar.github.io/weatherDashboard/)
+[![Thumbnail](assets/images/weatherDashboard-thumbnail.png)](https://s-suresh-kumar.github.io/weatherDashboard/)
 
 ## Purpose
 
@@ -21,7 +21,7 @@ The highlight of the app is:
 3. For Current weather conditions it displays city name, the date, current temperature, current weather icon to represent current weather conditions, humidity, windspeed and color coded uv index.
 4. The uv-index value is not obtained from the above api mentioned in step 2. It is obtained using a different api which is supposed to be one call API. The api used is "https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&exclude=current,minutely,hourly&appid={APIKey}
 5. Before rendering obtained uv-index value, appropriate color coding is rendered.
-6. The 5 day weather forecast displays 5 day forecast starting from current day. The date, weather icon representing forecasted weather conditions, forecasted max temperature and forecasted humidity are displayed.
+6. The same onecall API respon is used to render the 5 day forecast as well. The 5 day weather forecast displays 5 day forecast starting from current day. The date, weather icon representing forecasted weather conditions, forecasted max temperature and forecasted humidity are displayed.
 
 ### The code repository for this work can be found at:
 
@@ -34,4 +34,8 @@ The highlight of the app is:
 ## Usage
 
 Click on [Deployed Application](https://s-suresh-kumar.github.io/weatherDashboard/) to launch Javascript powered weatherDashboard app. Provide the city name for which current and 5 day forecast weather info is needed. If the app makes apprpriate API call to openweathermap site and the results are displayed.
+
+## Possible Improvements and extensiions
+
+Currently the input field only accepts city-name and it has to be spelt out right.  In future city-name plus STATE , country may be handled, so one can easily select same named city in different state or country. Also any error handling may be tightened. Right now the app uses 2 APIs to display , current conditions, UV index , 5 day forecast.  The second API became necessary because some how the app needs to know the latitute and longitude of the city. If latitude and longitude of the city can be found using a different easier method, then only the onecall API needs to be issued to openweathermap.
 
