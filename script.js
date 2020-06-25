@@ -10,7 +10,7 @@ function initPage() {
   const currentUVEl = document.getElementById("UV-index");
   const historyEl = document.getElementById("history");
   let searchHistory = JSON.parse(localStorage.getItem("search")) || [];
-  let ret_val = false;
+  let global_searchTerm = "";
 
   const APIKey = "452691537bbf409c6544c02c76a1f6ad";
   //  When search button is clicked, read the city name typed by the user
@@ -138,6 +138,9 @@ function initPage() {
             forecastEls[i].append(forecastHumidityEl);
           }
         });
+        searchHistory.push(global_searchTerm);
+        localStorage.setItem("search", JSON.stringify(searchHistory));
+        renderSearchHistory();
       })
       .catch(function (error) {
         console.log(error);
@@ -148,25 +151,21 @@ function initPage() {
             " " +
             "check city name!"
         );
-        console.log("RETURNING-FALSE");
-        ret_val = false;
-        return false;
       });
-    ret_val = true;
-    return true;
   }
 
   searchEl.addEventListener("click", function () {
     const searchTerm = inputEl.value;
-    ret_val = false;
-    console.log("RET-VAL", ret_val);
-    ret_val = getWeather(searchTerm);
-    console.log("RET-VAL after getWeather", ret_val);
-    if (ret_val == true) {
-      searchHistory.push(searchTerm);
-      localStorage.setItem("search", JSON.stringify(searchHistory));
-      renderSearchHistory();
-    }
+    global_searchTerm = "";
+    global_searchTerm = searchTerm;
+
+    getWeather(searchTerm);
+
+    // if (ret_val == true) {
+    //   searchHistory.push(searchTerm);
+    //   localStorage.setItem("search", JSON.stringify(searchHistory));
+    //   renderSearchHistory();
+    // }
   });
 
   clearEl.addEventListener("click", function () {
