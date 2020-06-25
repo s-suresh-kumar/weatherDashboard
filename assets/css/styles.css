@@ -1,5 +1,8 @@
 .container-md {
-  max-width: none;
+  /* max-width: none; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .navbar-brand {
@@ -11,10 +14,16 @@
   font-weight: bold;
 }
 
-.city-name {
-  font-size: 40px;
+.cityName {
+  font-size: 25px;
+  font-weight: bold;
 }
 
 .forecast-date {
   font-size: 18px;
+}
+
+.today {
+  font-weight: bold;
+  padding-top: 10px;
 }

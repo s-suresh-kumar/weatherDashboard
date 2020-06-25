@@ -11,14 +11,11 @@ function initPage() {
   const historyEl = document.getElementById("history");
   let searchHistory = JSON.parse(localStorage.getItem("search")) || [];
 
-  console.log(searchHistory);
-
   const APIKey = "452691537bbf409c6544c02c76a1f6ad";
   //  When search button is clicked, read the city name typed by the user
 
   function getWeather(cityName) {
     //  Using saved city name, execute a current condition get request from open weather map api
-
     let queryURL =
       "https://api.openweathermap.org/data/2.5/weather?q=" +
       cityName +
@@ -29,40 +26,30 @@ function initPage() {
       url: queryURL,
       method: "GET",
     }).then(function (response) {
-      console.log(response);
-
       //  Parse response to display current conditions
-
       //  Method for using "date" objects obtained from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date
       response.data = response;
       const currentDate = new Date(response.data.dt * 1000);
-      //const currentDate = new Date(response.daily[0].dt * 1000);
-      console.log(currentDate);
+
       const day = currentDate.getDate();
       const month = currentDate.getMonth() + 1;
       const year = currentDate.getFullYear();
       nameEl.innerHTML =
         response.data.name + " (" + month + "/" + day + "/" + year + ") ";
-
       let weatherPic = response.data.weather[0].icon;
       currentPicEl.setAttribute(
         "src",
         "https://openweathermap.org/img/wn/" + weatherPic + "@2x.png"
       );
-
       currentPicEl.setAttribute("alt", response.data.weather[0].description);
-
       currentTempEl.innerHTML =
         "Temperature: " + k2f(response.data.main.temp) + " &#176F";
-
       currentHumidityEl.innerHTML =
         "Humidity: " + response.data.main.humidity + "%";
-
       currentWindEl.innerHTML =
         "Wind Speed: " + response.data.wind.speed + " MPH";
 
       let lat = response.data.coord.lat;
-
       let lon = response.data.coord.lon;
 
       let UVQueryURL =
@@ -115,7 +102,7 @@ function initPage() {
           const forecastDateEl = document.createElement("p");
 
           forecastDateEl.setAttribute("class", "mt-3 mb-0 forecast-date");
-
+          forecastDateEl.setAttribute("style", "font-weight:bold");
           forecastDateEl.innerHTML =
             forecastMonth + "/" + forecastDay + "/" + forecastYear;
 
@@ -174,11 +161,13 @@ function initPage() {
     for (let i = 0; i < searchHistory.length; i++) {
       const historyItem = document.createElement("input");
 
-      // <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="email@example.com"></input>
-
       historyItem.setAttribute("type", "text");
       historyItem.setAttribute("readonly", true);
-      historyItem.setAttribute("class", "form-control d-block bg-white");
+      historyItem.setAttribute("class", "form-control d-block");
+      historyItem.setAttribute(
+        "style",
+        "color: brown; background-color:rgb(255, 241, 224)"
+      );
       historyItem.setAttribute("value", searchHistory[i]);
       historyItem.addEventListener("click", function () {
         getWeather(historyItem.value);
