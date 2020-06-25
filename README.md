@@ -35,7 +35,7 @@ The highlight of the app is:
 
 Click on [Deployed Application](https://s-suresh-kumar.github.io/weatherDashboard/) to launch Javascript powered weatherDashboard app. Provide the city name for which current and 5 day forecast weather info is needed. If the app makes apprpriate API call to openweathermap site and the results are displayed.
 
-## Possible Improvements and extensiions
+## Possible Improvements and extensions
 
 Currently the input field only accepts city-name and it has to be spelt out right.  In future city-name plus STATE , country may be handled, so one can easily select same named city in different state or country. Also any error handling may be tightened. Right now the app uses 2 APIs to display , current conditions, UV index , 5 day forecast.  The second API became necessary because some how the app needs to know the latitute and longitude of the city. If latitude and longitude of the city can be found using a different easier method, then only the onecall API needs to be issued to openweathermap.
 
