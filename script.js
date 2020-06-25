@@ -186,6 +186,7 @@ function initPage() {
             "alt",
             response.daily[forecastIndex].weather[0].description
           );
+          forecastWeatherEl.setAttribute("style", "text-align: center");
 
           forecastEls[i].append(forecastWeatherEl);
 
