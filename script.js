@@ -113,92 +113,102 @@ function initPage() {
         UVIndex.innerHTML = response.daily[0].uvi;
         currentUVEl.innerHTML = "UV Index: ";
         currentUVEl.append(UVIndex);
+        //      });
+
+        //  Using saved city name, execute a 5-day forecast get request from open weather map api
+        // console.log("BFRE-CITIID", response);
+        // let cityID = response.data.id;
+
+        // let forecastQueryURL =
+        //   "https://api.openweathermap.org/data/2.5/forecast?id=" +
+        //   cityID +
+        //   "&appid=" +
+        //   APIKey;
+
+        // $.ajax({
+        //   url: forecastQueryURL,
+        //   method: "GET",
+        // })
+        //   //After data comes back from the request
+        //   .then(function (response) {
+        //        .then(function(response) {
+
+        //  Parse response to display forecast for next 5 days underneath current conditions
+
+        console.log("raw response 5 day:", response);
+        // response.data = response;
+        // console.log("response.data:", response.data);
+        const forecastEls = document.querySelectorAll(".forecast");
+
+        // for (i = 0; i < forecastEls.length; i++) {
+        //   forecastEls[i].innerHTML = "";
+
+        //   const forecastIndex = i * 8 + 4;
+
+        //   const forecastDate = new Date(
+        //     response.data.list[forecastIndex].dt * 1000
+        //   );
+        // Get five day forecast
+        for (i = 0; i < 5; i++) {
+          forecastEls[i].innerHTML = "";
+          const forecastIndex = i;
+          const forecastDate = new Date(
+            response.daily[forecastIndex].dt * 1000
+          );
+          const forecastDay = forecastDate.getDate();
+          const forecastMonth = forecastDate.getMonth() + 1;
+          const forecastYear = forecastDate.getFullYear();
+          const forecastDateEl = document.createElement("p");
+
+          forecastDateEl.setAttribute("class", "mt-3 mb-0 forecast-date");
+
+          forecastDateEl.innerHTML =
+            forecastMonth + "/" + forecastDay + "/" + forecastYear;
+
+          forecastEls[i].append(forecastDateEl);
+
+          const forecastWeatherEl = document.createElement("img");
+
+          // forecastWeatherEl.setAttribute(
+          //   "src",
+          //   "https://openweathermap.org/img/wn/" +
+          //     response.data.list[forecastIndex].weather[0].icon +
+          //     "@2x.png"
+          // );
+
+          forecastWeatherEl.setAttribute(
+            "src",
+            "https://openweathermap.org/img/wn/" +
+              response.daily[forecastIndex].weather[0].icon +
+              "@2x.png"
+          );
+          forecastWeatherEl.setAttribute(
+            "alt",
+            response.daily[forecastIndex].weather[0].description
+          );
+
+          forecastEls[i].append(forecastWeatherEl);
+
+          const forecastTempEl = document.createElement("p");
+          //console.log("TEMP = ", response.data.list[forecastIndex].main.temp);
+          console.log("TEMP = ", response.daily[forecastIndex].temp.max);
+          forecastTempEl.innerHTML =
+            "Temp: " + k2f(response.daily[forecastIndex].temp.max) + " &#176F";
+
+          forecastEls[i].append(forecastTempEl);
+
+          const forecastHumidityEl = document.createElement("p");
+
+          // forecastHumidityEl.innerHTML =
+          //   "Humidity: " +
+          //   response.data.list[forecastIndex].main.humidity +
+          //   "%";
+          forecastHumidityEl.innerHTML =
+            "Humidity: " + response.daily[forecastIndex].humidity + "%";
+
+          forecastEls[i].append(forecastHumidityEl);
+        }
       });
-
-      //  Using saved city name, execute a 5-day forecast get request from open weather map api
-      console.log("BFRE-CITIID", response);
-      let cityID = response.data.id;
-
-      let forecastQueryURL =
-        "https://api.openweathermap.org/data/2.5/forecast?id=" +
-        cityID +
-        "&appid=" +
-        APIKey;
-
-      $.ajax({
-        url: forecastQueryURL,
-        method: "GET",
-      })
-        //After data comes back from the request
-        .then(function (response) {
-          //        .then(function(response) {
-
-          //  Parse response to display forecast for next 5 days underneath current conditions
-
-          console.log("raw response 5 day:", response);
-          response.data = response;
-          console.log("response.data:", response.data);
-          const forecastEls = document.querySelectorAll(".forecast");
-
-          for (i = 0; i < forecastEls.length; i++) {
-            forecastEls[i].innerHTML = "";
-
-            const forecastIndex = i * 8 + 4;
-
-            const forecastDate = new Date(
-              response.data.list[forecastIndex].dt * 1000
-            );
-
-            const forecastDay = forecastDate.getDate();
-
-            const forecastMonth = forecastDate.getMonth() + 1;
-
-            const forecastYear = forecastDate.getFullYear();
-
-            const forecastDateEl = document.createElement("p");
-
-            forecastDateEl.setAttribute("class", "mt-3 mb-0 forecast-date");
-
-            forecastDateEl.innerHTML =
-              forecastMonth + "/" + forecastDay + "/" + forecastYear;
-
-            forecastEls[i].append(forecastDateEl);
-
-            const forecastWeatherEl = document.createElement("img");
-
-            forecastWeatherEl.setAttribute(
-              "src",
-              "https://openweathermap.org/img/wn/" +
-                response.data.list[forecastIndex].weather[0].icon +
-                "@2x.png"
-            );
-
-            forecastWeatherEl.setAttribute(
-              "alt",
-              response.data.list[forecastIndex].weather[0].description
-            );
-
-            forecastEls[i].append(forecastWeatherEl);
-
-            const forecastTempEl = document.createElement("p");
-            console.log("TEMP = ", response.data.list[forecastIndex].main.temp);
-            forecastTempEl.innerHTML =
-              "Temp: " +
-              k2f(response.data.list[forecastIndex].main.temp) +
-              " &#176F";
-
-            forecastEls[i].append(forecastTempEl);
-
-            const forecastHumidityEl = document.createElement("p");
-
-            forecastHumidityEl.innerHTML =
-              "Humidity: " +
-              response.data.list[forecastIndex].main.humidity +
-              "%";
-
-            forecastEls[i].append(forecastHumidityEl);
-          }
-        });
     });
   }
 
