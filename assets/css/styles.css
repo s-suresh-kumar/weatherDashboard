@@ -1,20 +1,20 @@
 .container {
-    /* max-width: none; */
+  /* max-width: none; */
 }
 
 .navbar-brand {
-    font-size: 36px;
+  font-size: 36px;
 }
 
 .search-header {
-    font-size: 24px;
-    font-weight: bold;
+  font-size: 24px;
+  font-weight: bold;
 }
 
 .city-name {
-    font-size: 30px;
+  font-size: 40px;
 }
 
 .forecast-date {
-    font-size: 18px;
+  font-size: 18px;
 }

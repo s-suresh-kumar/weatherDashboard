@@ -25,8 +25,6 @@ function initPage() {
       "&appid=" +
       APIKey;
 
-    // axios
-    //   .get(queryURL)
     $.ajax({
       url: queryURL,
       method: "GET",
@@ -38,20 +36,16 @@ function initPage() {
       //  Method for using "date" objects obtained from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date
       response.data = response;
       const currentDate = new Date(response.data.dt * 1000);
-
+      //const currentDate = new Date(response.daily[0].dt * 1000);
       console.log(currentDate);
-
       const day = currentDate.getDate();
-
       const month = currentDate.getMonth() + 1;
-
       const year = currentDate.getFullYear();
-
       nameEl.innerHTML =
         response.data.name + " (" + month + "/" + day + "/" + year + ") ";
 
       let weatherPic = response.data.weather[0].icon;
-
+      //    let weatherPic = response.daily[0].weather[0].icon;
       currentPicEl.setAttribute(
         "src",
         "https://openweathermap.org/img/wn/" + weatherPic + "@2x.png"
@@ -92,13 +86,15 @@ function initPage() {
       // let UVQueryURL = "http://api.openweathermap.org/v3/uvi/" + lat + ",";
       // lon + "current.json?appid=" + APIKey;
       // http://api.openweathermap.org/v3/uvi/{lat},{lon}/current.json?appid={your-api-key
+
+      //let response;
       $.ajax({
         url: UVQueryURL,
         method: "GET",
       }).then(function (response) {
         const currentDateUV = new Date(response.daily[0].dt * 1000);
         let UVIndex = document.createElement("span");
-
+        console.log("UVRESPONSE:", response);
         //The following provide appropriate color coding for the UV-index field,
         //based on fetched UVI values from response.
         const uvi = Math.round(response.daily[0].uvi);
@@ -129,8 +125,6 @@ function initPage() {
         "&appid=" +
         APIKey;
 
-      //   axios
-      //     .get(forecastQueryURL)
       $.ajax({
         url: forecastQueryURL,
         method: "GET",
@@ -141,8 +135,9 @@ function initPage() {
 
           //  Parse response to display forecast for next 5 days underneath current conditions
 
-          console.log(response);
+          console.log("raw response 5 day:", response);
           response.data = response;
+          console.log("response.data:", response.data);
           const forecastEls = document.querySelectorAll(".forecast");
 
           for (i = 0; i < forecastEls.length; i++) {
@@ -186,7 +181,7 @@ function initPage() {
             forecastEls[i].append(forecastWeatherEl);
 
             const forecastTempEl = document.createElement("p");
-
+            console.log("TEMP = ", response.data.list[forecastIndex].main.temp);
             forecastTempEl.innerHTML =
               "Temp: " +
               k2f(response.data.list[forecastIndex].main.temp) +
