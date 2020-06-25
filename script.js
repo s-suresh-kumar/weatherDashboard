@@ -45,7 +45,6 @@ function initPage() {
         response.data.name + " (" + month + "/" + day + "/" + year + ") ";
 
       let weatherPic = response.data.weather[0].icon;
-      //    let weatherPic = response.daily[0].weather[0].icon;
       currentPicEl.setAttribute(
         "src",
         "https://openweathermap.org/img/wn/" + weatherPic + "@2x.png"
@@ -66,15 +65,6 @@ function initPage() {
 
       let lon = response.data.coord.lon;
 
-      // let UVQueryURL =
-      //   "https://api.openweathermap.org/data/2.5/uvi/forecast?lat=" +
-      //   lat +
-      //   "&lon=" +
-      //   lon +
-      //   "&appid=" +
-      //   APIKey +
-      //   "&cnt=1";
-
       let UVQueryURL =
         "https://api.openweathermap.org/data/2.5/onecall?lat=" +
         lat +
@@ -83,18 +73,13 @@ function initPage() {
         "&exclude=current,minutely,hourly&appid=" +
         APIKey;
 
-      // let UVQueryURL = "http://api.openweathermap.org/v3/uvi/" + lat + ",";
-      // lon + "current.json?appid=" + APIKey;
-      // http://api.openweathermap.org/v3/uvi/{lat},{lon}/current.json?appid={your-api-key
-
-      //let response;
       $.ajax({
         url: UVQueryURL,
         method: "GET",
       }).then(function (response) {
         const currentDateUV = new Date(response.daily[0].dt * 1000);
         let UVIndex = document.createElement("span");
-        console.log("UVRESPONSE:", response);
+
         //The following provide appropriate color coding for the UV-index field,
         //based on fetched UVI values from response.
         const uvi = Math.round(response.daily[0].uvi);
@@ -113,42 +98,11 @@ function initPage() {
         UVIndex.innerHTML = response.daily[0].uvi;
         currentUVEl.innerHTML = "UV Index: ";
         currentUVEl.append(UVIndex);
-        //      });
 
-        //  Using saved city name, execute a 5-day forecast get request from open weather map api
-        // console.log("BFRE-CITIID", response);
-        // let cityID = response.data.id;
-
-        // let forecastQueryURL =
-        //   "https://api.openweathermap.org/data/2.5/forecast?id=" +
-        //   cityID +
-        //   "&appid=" +
-        //   APIKey;
-
-        // $.ajax({
-        //   url: forecastQueryURL,
-        //   method: "GET",
-        // })
-        //   //After data comes back from the request
-        //   .then(function (response) {
-        //        .then(function(response) {
-
-        //  Parse response to display forecast for next 5 days underneath current conditions
-
-        console.log("raw response 5 day:", response);
-        // response.data = response;
-        // console.log("response.data:", response.data);
         const forecastEls = document.querySelectorAll(".forecast");
 
-        // for (i = 0; i < forecastEls.length; i++) {
-        //   forecastEls[i].innerHTML = "";
-
-        //   const forecastIndex = i * 8 + 4;
-
-        //   const forecastDate = new Date(
-        //     response.data.list[forecastIndex].dt * 1000
-        //   );
-        // Get five day forecast
+        // Get five day forecast, includes current Day above
+        // The temperatures displayed will be day's predicted max temperature
         for (i = 0; i < 5; i++) {
           forecastEls[i].innerHTML = "";
           const forecastIndex = i;
@@ -169,13 +123,6 @@ function initPage() {
 
           const forecastWeatherEl = document.createElement("img");
 
-          // forecastWeatherEl.setAttribute(
-          //   "src",
-          //   "https://openweathermap.org/img/wn/" +
-          //     response.data.list[forecastIndex].weather[0].icon +
-          //     "@2x.png"
-          // );
-
           forecastWeatherEl.setAttribute(
             "src",
             "https://openweathermap.org/img/wn/" +
@@ -187,26 +134,16 @@ function initPage() {
             response.daily[forecastIndex].weather[0].description
           );
           forecastWeatherEl.setAttribute("style", "text-align: center");
-
           forecastEls[i].append(forecastWeatherEl);
-
           const forecastTempEl = document.createElement("p");
-          //console.log("TEMP = ", response.data.list[forecastIndex].main.temp);
-          console.log("TEMP = ", response.daily[forecastIndex].temp.max);
           forecastTempEl.innerHTML =
             "Temp: " + k2f(response.daily[forecastIndex].temp.max) + " &#176F";
 
           forecastEls[i].append(forecastTempEl);
-
           const forecastHumidityEl = document.createElement("p");
 
-          // forecastHumidityEl.innerHTML =
-          //   "Humidity: " +
-          //   response.data.list[forecastIndex].main.humidity +
-          //   "%";
           forecastHumidityEl.innerHTML =
             "Humidity: " + response.daily[forecastIndex].humidity + "%";
-
           forecastEls[i].append(forecastHumidityEl);
         }
       });
@@ -217,17 +154,13 @@ function initPage() {
     const searchTerm = inputEl.value;
 
     getWeather(searchTerm);
-
     searchHistory.push(searchTerm);
-
     localStorage.setItem("search", JSON.stringify(searchHistory));
-
     renderSearchHistory();
   });
 
   clearEl.addEventListener("click", function () {
     searchHistory = [];
-
     renderSearchHistory();
   });
 
@@ -244,13 +177,9 @@ function initPage() {
       // <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="email@example.com"></input>
 
       historyItem.setAttribute("type", "text");
-
       historyItem.setAttribute("readonly", true);
-
       historyItem.setAttribute("class", "form-control d-block bg-white");
-
       historyItem.setAttribute("value", searchHistory[i]);
-
       historyItem.addEventListener("click", function () {
         getWeather(historyItem.value);
       });
@@ -266,7 +195,6 @@ function initPage() {
   }
 
   //  Save user's search requests and display them underneath search form
-
   //  When page loads, automatically generate current conditions and 5-day forecast for the last city the user searched for
 }
 
