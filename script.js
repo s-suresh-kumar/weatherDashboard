@@ -170,6 +170,7 @@ function initPage() {
 
   clearEl.addEventListener("click", function () {
     searchHistory = [];
+    localStorage.setItem("search", JSON.stringify(searchHistory));
     renderSearchHistory();
   });
 
