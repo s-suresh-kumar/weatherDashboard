@@ -1,3 +1,4 @@
+let reload = true;
 function initPage() {
   const inputEl = document.getElementById("city-input");
   const searchEl = document.getElementById("search-button");
@@ -11,7 +12,8 @@ function initPage() {
   const historyEl = document.getElementById("history");
   let searchHistory = JSON.parse(localStorage.getItem("search")) || [];
   let global_searchTerm = "";
-
+  reload = true;
+  console.log("reload-16:", reload);
   const APIKey = "452691537bbf409c6544c02c76a1f6ad";
   //  When search button is clicked, read the city name typed by the user
 
@@ -138,8 +140,12 @@ function initPage() {
             forecastEls[i].append(forecastHumidityEl);
           }
         });
-        searchHistory.push(global_searchTerm);
-        localStorage.setItem("search", JSON.stringify(searchHistory));
+        console.log("RELOAD:!!:", reload);
+        if (reload != true) {
+          searchHistory.push(cityName);
+
+          localStorage.setItem("search", JSON.stringify(searchHistory));
+        }
         renderSearchHistory();
       })
       .catch(function (error) {
@@ -158,7 +164,9 @@ function initPage() {
     const searchTerm = inputEl.value;
     global_searchTerm = "";
     global_searchTerm = searchTerm;
-
+    console.log("reload-167:", reload);
+    reload = false;
+    console.log("reload-169:", reload);
     getWeather(searchTerm);
 
     // if (ret_val == true) {
@@ -203,11 +211,16 @@ function initPage() {
   renderSearchHistory();
 
   if (searchHistory.length > 0) {
+    console.log("reload-212:", reload);
     getWeather(searchHistory[searchHistory.length - 1]);
   }
-
-  //  Save user's search requests and display them underneath search form
-  //  When page loads, automatically generate current conditions and 5-day forecast for the last city the user searched for
 }
-
-initPage();
+//  Save user's search requests and display them underneath search form
+//  When page loads, automatically generate current conditions and 5-day forecast for the last city the user searched for
+$(document).ready(function () {
+  reload = true;
+  console.log("reload-219:", reload);
+  initPage(reload);
+  // reload = false;
+  console.log("reload-222:", reload);
+});
